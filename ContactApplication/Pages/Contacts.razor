@@ -1,0 +1,60 @@
+﻿@page "/contacts"
+@using ContactApplication.Data
+@inject ContactService objContactService
+
+<h1>Contacts</h1>
+<NavLink class="nav-link" href="addcontact">
+    <span class="oi oi-plus" aria-hidden="true"></span>Add Contact
+</NavLink>
+
+@if (contacts == null)
+{
+    <p><em>Loading.....</em></p>
+}
+else
+{
+    <table class="table-bordered">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Birth Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var contact in contacts)
+            {
+                <tr>
+                    <td>@contact.FirstName</td>
+                    <td>@contact.LastName</td>
+                    <td>@contact.PhoneNumber</td>
+                    <td>@contact.BirthDate</td>
+                    <td>
+                        <a class="nav-link" href="EditContact/@contact.Id">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Edit
+                        </a>
+                        <a class="nav-link" href="ViewContact/@contact.Id">
+                            <span class="oi oi-info" aria-hidden="true"></span> View
+                        </a>
+                        <a class="nav-link" href="DeleteContact/@contact.Id">
+                            <span class="oi oi-trash" aria-hidden="true"></span> Delete
+                        </a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+}
+
+@code {
+    List<Contact> contacts;
+    protected override async Task OnInitializedAsync()
+    {
+        contacts = await Task.Run(() => objContactService.GetContacts());
+
+    }
+}
